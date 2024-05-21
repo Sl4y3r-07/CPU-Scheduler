@@ -25,6 +25,10 @@ struct Process{
     {
         return p1.arr_time<p2.arr_time;
     }
+ bool compareBurstTime(Process &p1, Process &p2)
+ {
+        return p1.b_time<p2.b_time;
+ }
 
 void fcfs(int arrival_time[], int burst_time[], int process_count) {
     
@@ -85,19 +89,88 @@ void fcfs(int arrival_time[], int burst_time[], int process_count) {
     }
 
     
-    cout << "\t\t+----------+--------------+------------+-------------+--------------+\n";
+    cout << "\t\t+----------+--------------+------------+-------------+--------------+\n";  
 
-
-
-
-    
-
+    double avg_waiting_time=0;
+    for(int i=0;i<process_count;i++)
+    {
+        avg_waiting_time+=waiting_time[i];
+    }  
+    avg_waiting_time= (double)avg_waiting_time/process_count;
+    cout << Green0 << ">" << Blue << " Average waiting time is : "<< Magenta<<avg_waiting_time<<"\n";
     
 }
 
 void sjf(int arrival_time[], int burst_time[], int process_count) {
    
-    cout <<Red<< "\t\t\tShortest Job Scheduling\n";
+    cout << Red << "\t\t\t***********************************\n";
+    cout << Red << "\t\t\t*    Shortest Job First (SJF)     *\n";
+    cout << Red << "\t\t\t***********************************\n\n";
+
+    cout <<Green0<<">"<<Green1<<"In this type, CPU is assigned to the process that has the smallest next CPU burst\n";
+    cout <<Green0<<">"<<Green1<<"If the next CPU bursts of two processes are the same, FCFS scheduling is used to break the tie\n";
+    cout <<Green0<<">"<<Green1<<"It is non-preemptive (i.e, I have implemented non-preemptive for now.)\n";
+
+    //Algo starts here 
+
+    vector<Process> processes(process_count);
+    for(int i=0;i<process_count;i++)
+    {
+        processes[i]={i+1, arrival_time[i], burst_time[i]};
+    }
+    // sorting by arrival time
+    sort(processes.begin(), processes.end(),compareArrivalTime);
+    //Because, first process that is to be executed is to be decided by arrival time.
+    sort(processes.begin()+1, processes.end(),compareBurstTime);
+    int waiting_time[process_count];
+    waiting_time[0]= 0;
+
+    int start_time[process_count];
+
+    int current_time=0;
+
+    cout << Green0 << ">" << Magenta << " Process Execution Details:\n";
+    cout << Green0 << ">" << Magenta << " --------------------------\n";
+
+    for(int i=0;i<process_count;i++)
+    {
+       if (current_time < processes[i].arr_time) {
+            cout << Green0 << ">" << Blue << " CPU is idle from time " << current_time 
+                 << " to " << processes[i].arr_time << "\n";
+            current_time = processes[i].arr_time;
+        }
+       
+       start_time[i] = current_time;
+       waiting_time[i]= start_time[i]-processes[i].arr_time;
+
+       cout << Green0 << ">" << Blue << " Process " << processes[i].proc_id << " is running from time " << current_time << " to " << current_time + processes[i].b_time << "\n";
+       
+       current_time += processes[i].b_time;
+
+    }
+
+      cout << Green0 << "\t\t+----------+--------------+------------+-------------+--------------+\n";
+    cout << "\t\t| " << setw(8) << "Process" << " | " << setw(12) << "Arrival Time" << " | "<< setw(10) << "Burst Time" << " | " << setw(11) << "Start Time" << " | "<< setw(12) << "Waiting Time" << " |\n";
+    cout << Green0 << "\t\t+----------+--------------+------------+-------------+--------------+\n";
+
+    
+     for (int i=0;i<process_count;i++) {
+        cout << "\t\t| " << setw(8) <<processes[i].proc_id  << " | " << setw(12) << processes[i].arr_time << " | "<< setw(10) << processes[i].b_time << " | " << setw(11) << start_time[i] << " | "<< setw(12) << waiting_time[i] << " |\n";
+    }
+
+    
+    cout << "\t\t+----------+--------------+------------+-------------+--------------+\n";   
+
+    double avg_waiting_time=0;
+    for(int i=0;i<process_count;i++)
+    {
+        avg_waiting_time+=waiting_time[i];
+    }  
+    avg_waiting_time= (double)avg_waiting_time/process_count;
+
+    cout << Green0 << ">" << Blue << " Average waiting time is : "<< Magenta<<avg_waiting_time<<"\n";
+       
+
 }
 
 void rr(int arrival_time[], int burst_time[], int process_count) {
