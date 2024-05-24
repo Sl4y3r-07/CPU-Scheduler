@@ -5,6 +5,7 @@
 #include <string>
 #include <iomanip>
 #include <bits/stdc++.h>
+#include <queue>
 using namespace std;
 
 struct Process{
@@ -420,5 +421,93 @@ void priority(int arrival_time[], int burst_time[], int process_count) {
 
 void multi_queue(int arrival_time[], int burst_time[], int process_count) {
     
-    cout <<Red<< "\t\t\tMultilevel Queue Scheduling algorithm \n";
+    cout << Red << "\t\t\t***********************************\n";
+    cout << Red << "\t\t\t*   Multilevel Queue Scheduling   *\n";
+    cout << Red << "\t\t\t***********************************\n\n";
+
+    
+    vector<vector<int>> queues(3);
+
+    cout<<Green0<<">"<<Yellow<<" Enter the priority of the processes (ranging from 1 to 9): \n";
+    int priority_=0;
+    vector<Process_priority> processes(process_count);
+    for(int i=0;i<process_count;i++)
+    {   cout<<Green0<< ">"<<Blue<<" Process "<<i+1<<" "<<Magenta;
+        cin>>priority_;
+        processes[i]={i+1, arrival_time[i], burst_time[i],priority_};
+    }
+
+    sort(processes.begin(),processes.end(),compareArrivalTime_priority);
+    cout<<"\n";
+    for(int i=0;i<process_count;i++)
+    {
+        if(processes[i].priority>=1 && processes[i].priority<=3)
+        {
+            queues[0].push_back(i);
+        }
+        if(processes[i].priority>=4 && processes[i].priority<=6)
+        {
+            queues[1].push_back(i);
+        }
+        if(processes[i].priority>=7 && processes[i].priority<=9)
+        {
+            queues[2].push_back(i);
+        }
+    }
+
+    for(int i=0;i<3;i++)
+    {   cout<<Green0<<">"<<Blue<<" Queue "<<i+1<<" : "<<Magenta;
+        for(int j=0;j<queues[i].size();j++)
+        {
+            cout<<processes[queues[i][j]].proc_id<<" ";
+        }
+    cout<<"\n";
+    }
+
+    vector<int> waiting_time(process_count, 0);
+    vector<int> start_time(process_count, 0);
+    vector<int> completion_time(process_count, 0);
+    vector<int> turnaround_time(process_count, 0);
+
+    int current_time=0; int process_completed=0;
+
+    vector<int> temp_burst_time(process_count);
+    for(int i=0;i<process_count;i++)
+    {
+        temp_burst_time[i]=processes[i].b_time;
+    }
+      
+    int i=0;
+    while (process_completed != process_count) {
+        // remaining 
+    }
+
+    cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
+    cout << "\t\t| " << setw(8) << "Process" << " | " << setw(12) << "Arrival Time" << " | " << setw(10) << "Burst Time" << " | " << setw(8) << "Priority" << " | " << setw(11) << "Start Time" << " | " << setw(14) << "Completion " << " | " << setw(14) << "Turnaround " << " | " << setw(12) << "Waiting Time" << " |\n";
+    cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
+
+    for (int i = 0; i < process_count; i++) {
+        cout << "\t\t| " << setw(8) << processes[i].proc_id << " | " << setw(12) << processes[i].arr_time << " | " << setw(10) << processes[i].b_time << " | " << setw(8) << processes[i].priority << " | " << setw(11) << start_time[i] << " | " << setw(14) << completion_time[i] << " | " << setw(14) << turnaround_time[i] << " | " << setw(12) << waiting_time[i] << " |\n";
+    }
+
+    cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
+
 }
+
+ 
+
+
+
+
+
+
+
+
+    
+    
+   
+    
+    
+
+
+

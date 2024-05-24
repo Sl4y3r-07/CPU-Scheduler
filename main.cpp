@@ -3,6 +3,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 #include "scheduling_algo.h"
+#include <queue>
 
 using namespace std;
 
