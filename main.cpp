@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
         cout<<Green1<<"\t 2. Shortest Job First (SJF)\n";
         cout<<Green1<<"\t 3. Round Robin (RR)\n";
         cout<<Green1<<"\t 4. Priority Algorithm\n";
-        cout<<Green1<<"\t 5. Multilevel Queue Scheduling\n";
+        cout<<Green1<<"\t 5. Shortest Remaining Time First\n";
  
         int algo_choice;
         cout<<Green0<<">"<<Yellow<<" Enter the choice: "<<Blue;
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]) {
 
         if(algo_choice==5)
         {
-            multi_queue(Arrival_time,Burst_time, Process_count);
+            srtf(Arrival_time,Burst_time, Process_count);
         }
 
    }

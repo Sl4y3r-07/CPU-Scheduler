@@ -115,6 +115,7 @@ void fcfs(int arrival_time[], int burst_time[], int process_count) {
        
        current_time += processes[i].b_time;
 
+
     }
 
     
@@ -137,7 +138,7 @@ void fcfs(int arrival_time[], int burst_time[], int process_count) {
     }  
     avg_waiting_time= (double)avg_waiting_time/process_count;
     cout << Green0 << ">" << Blue << " Average waiting time is : "<< Magenta<<avg_waiting_time<<"\n";
-    
+
 }
 
 void sjf(int arrival_time[], int burst_time[], int process_count) {
@@ -148,7 +149,7 @@ void sjf(int arrival_time[], int burst_time[], int process_count) {
 
     cout <<Green0<<">"<<Green1<<" In this type, CPU is assigned to the process that has the smallest next CPU burst\n";
     cout <<Green0<<">"<<Green1<<" If the next CPU bursts of two processes are the same, FCFS scheduling is used to break the tie\n";
-    cout <<Green0<<">"<<Green1<<" It is non-preemptive (i.e, I have implemented non-preemptive for now.)\n";
+    cout <<Green0<<">"<<Green1<<" It is non-preemptive \n";
 
     //Algo starts from here 
 
@@ -308,7 +309,7 @@ void rr(int arrival_time[], int burst_time[], int process_count) {
         waiting_time[i]= turnaround_time[i]-processes[i].b_time;
     }
 
-     cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
+    cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
     cout << "\t\t| " << setw(8) << "Process" << " | " << setw(12) << "Arrival Time" << " | " << setw(10) << "Burst Time" << " | " << setw(11) << "Start Time" << " | " << setw(14) << "Completion " << " | " << setw(14) << "Turnaround " << " | " << setw(12) << "Waiting Time" << " |\n";
     cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
 
@@ -319,15 +320,18 @@ void rr(int arrival_time[], int burst_time[], int process_count) {
     cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
  
 
-    double avg_waiting_time=0;
-    for(int i=0;i<process_count;i++)
-    {
-        avg_waiting_time+=waiting_time[i];
-    }  
-    avg_waiting_time= (double)avg_waiting_time/process_count;
+    double avg_waiting_time = 0; double avg_turnaround_time=0;
+    for (int i = 0; i < process_count; ++i) {
+        avg_waiting_time += waiting_time[i];
+        avg_turnaround_time+=turnaround_time[i];
+    }
+    avg_waiting_time = avg_waiting_time / process_count;
+    avg_turnaround_time= avg_turnaround_time/process_count;
 
-    cout << Green0 << ">" << Blue << " Average waiting time is : "<< Magenta<<avg_waiting_time<<"\n";
-       
+
+    cout << Green0 << ">" << Blue << " Average waiting time is : " << Magenta << avg_waiting_time << "\n";
+    cout << Green0 << ">" << Blue << " Average turnaround time is : " << Magenta << avg_turnaround_time << "\n";
+     
 }
 
 void priority(int arrival_time[], int burst_time[], int process_count) {
@@ -406,63 +410,37 @@ void priority(int arrival_time[], int burst_time[], int process_count) {
 
     cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
 
-     double avg_waiting_time=0;
-    for(int i=0;i<process_count;i++)
-    {
-        avg_waiting_time+=waiting_time[i];
-    }  
-    avg_waiting_time= (double)avg_waiting_time/process_count;
-
-    cout << Green0 << ">" << Blue << " Average waiting time is : "<< Magenta<<avg_waiting_time<<"\n";
-       
+    double avg_waiting_time = 0; double avg_turnaround_time=0;
+    for (int i = 0; i < process_count; ++i) {
+        avg_waiting_time += waiting_time[i];
+        avg_turnaround_time+=turnaround_time[i];
+    }
+    avg_waiting_time = avg_waiting_time / process_count;
+    avg_turnaround_time= avg_turnaround_time/process_count;
 
 
+    cout << Green0 << ">" << Blue << " Average waiting time is : " << Magenta << avg_waiting_time << "\n";
+    cout << Green0 << ">" << Blue << " Average turnaround time is : " << Magenta << avg_turnaround_time << "\n";
+    
 }
 
-void multi_queue(int arrival_time[], int burst_time[], int process_count) {
-    
+void srtf(int arrival_time[], int burst_time[], int process_count)
+{
     cout << Red << "\t\t\t***********************************\n";
-    cout << Red << "\t\t\t*   Multilevel Queue Scheduling   *\n";
+    cout << Red << "\t\t\t*  Shortest Remaining Time First  *\n";
     cout << Red << "\t\t\t***********************************\n\n";
 
-    
-    vector<vector<int>> queues(3);
+    cout <<Green0<<">"<<Green1<<" It schedules the process with the least remaining burst time.\n";
+    cout <<Green0<<">"<<Green1<<" It is preemptive version of Shortest Job First Scheduling.\n";
+    cout <<Green0<<">"<<Green1<<" It minimizes the average waiting time.\n";
 
-    cout<<Green0<<">"<<Yellow<<" Enter the priority of the processes (ranging from 1 to 9): \n";
-    int priority_=0;
-    vector<Process_priority> processes(process_count);
-    for(int i=0;i<process_count;i++)
-    {   cout<<Green0<< ">"<<Blue<<" Process "<<i+1<<" "<<Magenta;
-        cin>>priority_;
-        processes[i]={i+1, arrival_time[i], burst_time[i],priority_};
-    }
-
-    sort(processes.begin(),processes.end(),compareArrivalTime_priority);
-    cout<<"\n";
+    vector<Process> processes(process_count);
     for(int i=0;i<process_count;i++)
     {
-        if(processes[i].priority>=1 && processes[i].priority<=3)
-        {
-            queues[0].push_back(i);
-        }
-        if(processes[i].priority>=4 && processes[i].priority<=6)
-        {
-            queues[1].push_back(i);
-        }
-        if(processes[i].priority>=7 && processes[i].priority<=9)
-        {
-            queues[2].push_back(i);
-        }
+        processes[i]={i+1, arrival_time[i], burst_time[i]};
     }
 
-    for(int i=0;i<3;i++)
-    {   cout<<Green0<<">"<<Blue<<" Queue "<<i+1<<" : "<<Magenta;
-        for(int j=0;j<queues[i].size();j++)
-        {
-            cout<<processes[queues[i][j]].proc_id<<" ";
-        }
-    cout<<"\n";
-    }
+    sort(processes.begin(), processes.end(),compareArrivalTime);
 
     vector<int> waiting_time(process_count, 0);
     vector<int> start_time(process_count, 0);
@@ -476,23 +454,76 @@ void multi_queue(int arrival_time[], int burst_time[], int process_count) {
     {
         temp_burst_time[i]=processes[i].b_time;
     }
-      
-    int i=0;
+
+    cout << Green0 << ">" << Magenta << " Process Execution Details:\n";
+    cout << Green0 << ">" << Magenta << " --------------------------\n"<<Blue;
+    
+    
     while (process_completed != process_count) {
-        // remaining 
+        int min_time = INT_MAX;
+        int shortest_burst_process = -1;
+
+        for (int i = 0; i < process_count; ++i) {
+            if (processes[i].arr_time <= current_time && temp_burst_time[i] < min_time && temp_burst_time[i] > 0) {
+                min_time = temp_burst_time[i];
+                shortest_burst_process = i;
+            }
+        }
+
+        if (shortest_burst_process == -1) {
+            //cpu idle time
+            cout << Green0 << ">" << Blue << " CPU is idle at time " << current_time << "\n";
+            current_time++;
+            continue;
+        }
+
+        if (temp_burst_time[shortest_burst_process] == processes[shortest_burst_process].b_time) {
+            start_time[shortest_burst_process] = current_time;
+        }
+
+        temp_burst_time[shortest_burst_process]--;
+        current_time++;
+
+        if (temp_burst_time[shortest_burst_process] == 0) {
+            process_completed++;
+            completion_time[shortest_burst_process] = current_time;
+            waiting_time[shortest_burst_process] = completion_time[shortest_burst_process] - processes[shortest_burst_process].b_time - processes[shortest_burst_process].arr_time;
+            turnaround_time[shortest_burst_process] = completion_time[shortest_burst_process] - processes[shortest_burst_process].arr_time;
+
+            if (waiting_time[shortest_burst_process] < 0) {
+                waiting_time[shortest_burst_process] = 0;
+            }
+        }
     }
 
-    cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
-    cout << "\t\t| " << setw(8) << "Process" << " | " << setw(12) << "Arrival Time" << " | " << setw(10) << "Burst Time" << " | " << setw(8) << "Priority" << " | " << setw(11) << "Start Time" << " | " << setw(14) << "Completion " << " | " << setw(14) << "Turnaround " << " | " << setw(12) << "Waiting Time" << " |\n";
-    cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
+    cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
+    cout << "\t\t| " << setw(8) << "Process" << " | " << setw(12) << "Arrival Time" << " | " << setw(10) << "Burst Time" << " | " << setw(11) << "Start Time" << " | " << setw(14) << "Completion" << " | " << setw(14) << "Turnaround" << " | " << setw(12) << "Waiting Time" << " |\n";
+    cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
 
-    for (int i = 0; i < process_count; i++) {
-        cout << "\t\t| " << setw(8) << processes[i].proc_id << " | " << setw(12) << processes[i].arr_time << " | " << setw(10) << processes[i].b_time << " | " << setw(8) << processes[i].priority << " | " << setw(11) << start_time[i] << " | " << setw(14) << completion_time[i] << " | " << setw(14) << turnaround_time[i] << " | " << setw(12) << waiting_time[i] << " |\n";
+    for (int i = 0; i < process_count; ++i) {
+        cout << "\t\t| " << setw(8) << processes[i].proc_id << " | " << setw(12) << processes[i].arr_time << " | " << setw(10) << processes[i].b_time << " | " << setw(11) << start_time[i] << " | " << setw(14) << completion_time[i] << " | " << setw(14) << turnaround_time[i] << " | " << setw(12) << waiting_time[i] << " |\n";
     }
 
-    cout << "\t\t+----------+--------------+------------+----------+-------------+----------------+-----------------+-------------+\n";
+    cout << "\t\t+----------+--------------+------------+-------------+----------------+-----------------+-------------+\n";
 
+    double avg_waiting_time = 0; double avg_turnaround_time=0;
+    for (int i = 0; i < process_count; ++i) {
+        avg_waiting_time += waiting_time[i];
+        avg_turnaround_time+=turnaround_time[i];
+    }
+    avg_waiting_time = avg_waiting_time / process_count;
+    avg_turnaround_time= avg_turnaround_time/process_count;
+
+
+    cout << Green0 << ">" << Blue << " Average waiting time is : " << Magenta << avg_waiting_time << "\n";
+    cout << Green0 << ">" << Blue << " Average turnaround time is : " << Magenta << avg_turnaround_time << "\n";
+    
 }
+
+
+
+
+
 
  
 
